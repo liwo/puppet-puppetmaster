@@ -61,7 +61,9 @@
 # Copyright 2012 Felipe Salum, unless otherwise noted.
 #
 class puppetmaster (
+  $puppetmaster_package_name         = $puppetmaster::params::puppetmaster_package_name,
   $puppetmaster_package_ensure       = 'present',
+  $puppetmaster_service_name         = $puppetmaster::params::puppetmaster_service_name,
   $puppetmaster_service_ensure       = 'running',
   $puppetmaster_service_enable       = 'true',
   $puppetmaster_server               = '',
@@ -72,12 +74,7 @@ class puppetmaster (
   $puppetmaster_reporturl            = '',
   $puppetmaster_facts_terminus       = '',
   $puppetmaster_modulepath           = ''
-) {
-
-  include puppetmaster::params
-
-  $puppetmaster_package_name = $puppetmaster::params::puppetmaster_package_name
-  $puppetmaster_service_name = $puppetmaster::params::puppetmaster_service_name
+) inherits puppetmaster::params {
 
   package { $puppetmaster_package_name:
     ensure  => $puppetmaster_package_ensure,
