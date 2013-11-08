@@ -4,10 +4,14 @@ define puppetmaster::mountpoint(
 	$deny = [],
 ) {
 
-	$allow_rules = prefix($allow, 'set allow[*] ')
-	$deny_rules = prefix($deny, 'set deny[*] ')
+	$allow_rules = inline_template('<% @allow.each do |value| -%>
+		set \'allow[. = "<%= value %>"]\' \'<%= value %>\'
+	<%- end %>')
+	$deny_rules = inline_template('<% @deny.each do |value| -%>
+		set \'deny[. = "<%= value %>"]\' \'<%= value %>\'
+	<%- end %>')
 
-	$changes = concat(concat(["set path ${path}"], $allow_rules), $deny_rules)
+	$changes = "set path ${path}\n${allow_rules}\n${deny_rules}"
 
 	augeas { "puppetmaster::mountpoint::${name}":
 		context => "/files/etc/puppet/fileserver.conf/${name}/",
