@@ -1,0 +1,15 @@
+<% if @comment -%>
+<% @comment.split("\n").each do |line| -%>
+<%= line.strip %>
+<% end -%>
+<% end -%>
+path <%= @path %>
+<% if @auth -%>
+auth <%= @auth %>
+<% end -%>
+<% if @method -%>
+method <%= @method %>
+<% end -%>
+<% if @allow -%>
+allow <%= @allow %>
+<% end %>
