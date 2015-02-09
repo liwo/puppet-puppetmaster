@@ -37,8 +37,17 @@
 # [*puppetmaster_modulepath*]
 #   Defines the module path.
 #
-# [*puppetmaster_manifestdir*]
-#   Defines the directory containing the manifests
+# [*puppetmaster_templatepath*]
+#   Defines the template path.
+#
+# [*puppetmaster_environmentpath*]
+#   Defines the environment path.
+#
+# [*puppetmaster_hiera_config*]
+#   Defines the path to the hiera configuration file.
+#
+# [*puppetmaster_parser*]
+#   Defines the puppet parser to use.
 #
 # === Variables
 #
@@ -47,13 +56,13 @@
 #  class { puppetmaster:
 #    puppetmaster_server               => 'puppet1.puppet.test',
 #    puppetmaster_certname             => 'puppet1.puppet.test',
-#    puppetmaster_report               => 'true',
-#    puppetmaster_autosign             => 'true',
+#    puppetmaster_report               => true,
+#    puppetmaster_autosign             => true,
 #    puppetmaster_reports              => 'store, http',
 #    puppetmaster_reporturl            => 'http://puppet1.puppet.test:8080/reports/upload',
 #    puppetmaster_facts_terminus       => 'PuppetDB',
 #    puppetmaster_modulepath           => '$confdir/modules:$confdir/modules-0',
-#    puppetmaster_manifestdir          => '$confdir/manifests',
+#    puppetmaster_parser               => 'future',
 #  }
 #
 # === Authors
@@ -65,23 +74,26 @@
 # Copyright 2012 Felipe Salum, unless otherwise noted.
 #
 class puppetmaster (
-  $puppetmaster_package_name         = $puppetmaster::params::puppetmaster_package_name,
+  $puppetmaster_packages_name         = $puppetmaster::params::puppetmaster_packages_name,
   $puppetmaster_package_ensure       = 'present',
   $puppetmaster_service_name         = $puppetmaster::params::puppetmaster_service_name,
   $puppetmaster_service_ensure       = 'running',
-  $puppetmaster_service_enable       = 'true',
+  $puppetmaster_service_enable       = true,
   $puppetmaster_server               = '',
   $puppetmaster_certname             = '',
-  $puppetmaster_report               = 'true',
-  $puppetmaster_autosign             = 'false',
+  $puppetmaster_report               = true,
+  $puppetmaster_autosign             = false,
   $puppetmaster_reports              = '',
   $puppetmaster_reporturl            = '',
   $puppetmaster_facts_terminus       = '',
   $puppetmaster_modulepath           = '',
-  $puppetmaster_manifestdir          = ''
+  $puppetmaster_templatepath         = '',
+  $puppetmaster_environmentpath      = '',
+  $puppetmaster_hiera_config         = '',
+  $puppetmaster_parser               = '',
 ) inherits puppetmaster::params {
 
-  package { $puppetmaster_package_name:
+  package { $puppetmaster_packages_name:
     ensure  => $puppetmaster_package_ensure,
   }
 
@@ -93,7 +105,7 @@ class puppetmaster (
       enable     => $puppetmaster_service_enable,
       hasrestart => true,
       hasstatus  => true,
-      require    => Package[$puppetmaster_package_name],
+      require    => Package[$puppetmaster_packages_name],
     }
   }
 
@@ -107,6 +119,30 @@ class puppetmaster (
       section => 'main',
       setting => 'modulepath',
       value   => $puppetmaster_modulepath,
+    }
+  }
+
+  if ($puppetmaster_templatepath) {
+    ini_setting { 'puppetmaster_templatepath':
+      section => 'main',
+      setting => 'templatepath',
+      value   => $puppetmaster_templatepath,
+    }
+  }
+
+  if ($puppetmaster_environmentpath) {
+    ini_setting { 'puppetmaster_environmentpath':
+      section => 'main',
+      setting => 'environmentpath',
+      value   => $puppetmaster_environmentpath,
+    }
+  }
+
+  if ($puppetmaster_hiera_config) {
+    ini_setting { 'puppetmaster_hiera_config':
+      section => 'main',
+      setting => 'hiera_config',
+      value   => $puppetmaster_hiera_config,
     }
   }
 
@@ -166,11 +202,11 @@ class puppetmaster (
     }
   }
 
-  if ($puppetmaster_manifestdir) {
-    ini_setting { 'puppetmaster_manifestdir':
-      section => 'main',
-      setting => 'manifestdir',
-      value   => $puppetmaster_manifestdir,
+  if ($puppetmaster_parser) {
+    ini_setting { 'puppetmaster_parser':
+      section => 'master',
+      setting => 'parser',
+      value   => $puppetmaster_parser,
     }
   }
 

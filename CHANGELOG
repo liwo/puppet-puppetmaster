@@ -1,3 +1,17 @@
+2014-06-03 - Romuald du Song <romuald.dusong@deveryware.com> - 0.0.8
+* Allow specifying an array of modules instead of one module for puppetmaster service.
+2014-05-09 - Ryan Peck <iamreck@gmail.com>   - 0.0.7
+* Added templatepath configuration option
+2014-04-12 - Felipe Salum <fsalum@gmail.com> - 0.0.6
+* Moved from operatingsystem to osfamily
+2014-02-17 - Felipe Salum <fsalum@gmail.com> - 0.0.5
+* Updated puppetlabs yum repo
+* Added dependency on stdlib
+2013-10-31 - Felipe Salum <fsalum@gmail.com> - 0.0.4
+* Same as 0.0.3, typo
+2013-10-31 - Felipe Salum <fsalum@gmail.com> - 0.0.3
+* Fixed puppetlabs-release package name
+* Moving from cprice404-inifile to puppetlabs-inifile dependency
 2012-10-31 - Felipe Salum <fsalum@gmail.com> - 0.0.2
 * Added a check for the puppetmaster service resource because of conflicts with
 * PuppetDB puppetmaster service resource
