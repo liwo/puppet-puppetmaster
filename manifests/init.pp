@@ -78,7 +78,7 @@ class puppetmaster (
   $puppetmaster_reporturl            = '',
   $puppetmaster_facts_terminus       = '',
   $puppetmaster_modulepath           = '',
-  $puppetmaster_manifestdir          = ''
+  $puppetmaster_manifestdir          = '',
 ) inherits puppetmaster::params {
 
   package { $puppetmaster_package_name:

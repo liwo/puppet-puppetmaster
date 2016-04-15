@@ -9,7 +9,7 @@ define puppetmaster::authrule (
   include puppetmaster::auth
 
   concat::fragment { "puppetmaster-auth.conf/${name}":
-    target => '/etc/puppet/auth.conf',
+    target => $puppetmaster::auth::auth_conf,
     content => template('puppetmaster/auth.rule.erb'),
     order => $order,
   }

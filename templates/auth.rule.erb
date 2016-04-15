@@ -11,5 +11,11 @@ auth <%= @auth %>
 method <%= @method %>
 <% end -%>
 <% if @allow -%>
+<%- if @allow.is_a? Array -%>
+<%- @allow.each do |value| -%>
+allow <%= value %>
+<%- end -%>
+<%- else -%>
 allow <%= @allow %>
+<% end %>
 <% end %>
