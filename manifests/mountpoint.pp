@@ -15,7 +15,7 @@ define puppetmaster::mountpoint(
 
 		$fileserver_changes = "set path ${path}\n${allow_rules}\n${deny_rules}"
 	} else {
-		$fileserver_changes = 'set \'allow[. = "*"]\' \'*\''
+		$fileserver_changes = "set path ${path}\nset 'allow[. = \"*\"]' '*'"
 
 		puppetmaster::authrule { "mountpoint $name":
 			path => "~ ^/puppet/v3/file_(metadata|content)/${name}/",
