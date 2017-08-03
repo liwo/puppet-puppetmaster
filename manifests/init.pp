@@ -100,6 +100,7 @@ class puppetmaster (
   Ini_setting {
     path    => '/etc/puppet/puppet.conf',
     ensure  => present,
+    notify  => Service[$puppetmaster_service_name],
   }
 
   if ($puppetmaster_modulepath) {
