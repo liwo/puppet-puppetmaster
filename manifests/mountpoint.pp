@@ -3,19 +3,31 @@ define puppetmaster::mountpoint(
 	$allow = ['*'],
 	$deny = [],
 ) {
+  include puppetmaster::params
 
-	$allow_rules = inline_template('<% @allow.each do |value| -%>
-		set \'allow[. = "<%= value %>"]\' \'<%= value %>\'
-	<%- end %>')
-	$deny_rules = inline_template('<% @deny.each do |value| -%>
-		set \'deny[. = "<%= value %>"]\' \'<%= value %>\'
-	<%- end %>')
+	if versioncmp($::puppetversion, '4.0') < 0 {
+		$allow_rules = inline_template('<% @allow.each do |value| -%>
+			set \'allow[. = "<%= value %>"]\' \'<%= value %>\'
+		<%- end %>')
+		$deny_rules = inline_template('<% @deny.each do |value| -%>
+			set \'deny[. = "<%= value %>"]\' \'<%= value %>\'
+		<%- end %>')
 
-	$changes = "set path ${path}\n${allow_rules}\n${deny_rules}"
+		$fileserver_changes = "set path ${path}\n${allow_rules}\n${deny_rules}"
+	} else {
+		$fileserver_changes = "set path ${path}\nset 'allow[. = \"*\"]' '*'"
+
+		puppetmaster::authrule { "mountpoint $name":
+			path => "~ ^/puppet/v3/file_(metadata|content)/${name}/",
+			auth => 'yes',
+			allow => $allow,
+			order => 450,
+		}
+	}
 
 	augeas { "puppetmaster::mountpoint::${name}":
-		context => "/files/etc/puppet/fileserver.conf/${name}/",
-		changes => $changes,
+		context => "/files/${puppetmaster::params::config_root}/fileserver.conf/${name}/",
+		changes => $fileserver_changes,
 		notify => Service[$puppetmaster::puppetmaster_service_name],
 	}
 }

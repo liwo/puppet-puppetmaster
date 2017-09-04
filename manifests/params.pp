@@ -33,4 +33,9 @@ class puppetmaster::params {
     }
   }
 
+  if versioncmp($::puppetversion, '4.0') < 0 {
+    $config_root = '/etc/puppet'
+  } else {
+    $config_root = '/etc/puppetlabs/puppet'
+  }
 }
